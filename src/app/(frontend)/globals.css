@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   NICI Group — visual system
+
+   Ground is chosen from the use scene, not from category habit: a procurement
+   officer on a mid-range Android, often in bright daylight or a lit factory
+   office. The reading surface is therefore light. The hero and the close are
+   deep ink in both themes — they are structural anchors, not a mode.
+
+   Colour strategy is full palette. The group owns ink, paper and one signal
+   yellow; each business owns a saturated field of its own. The breadth is the
+   product, so the colour system carries it.
+--------------------------------------------------------------------------- */
+
+:root {
+  --font-archivo: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-literata: "Literata", Georgia, "Times New Roman", serif;
+
+  /* Group */
+  --ink:        #0A1628;
+  --ink-2:      #142639;
+  --ink-3:      #23384f;
+  --signal:     #FFC93C;
+  --signal-ink: #6A4A00;
+
+  /* Reading surface */
+  --ground:     #FFFFFF;
+  --ground-2:   #F1F4F8;
+  --ground-3:   #E4EAF1;
+  --text:       #0A1628;
+  --text-2:     #4A5B70;
+  --text-3:     #607187;
+  --line:       #D7DFE9;
+  --line-2:     #B9C5D4;
+
+  /* On ink */
+  --on-ink:     #F2F6FA;
+  --on-ink-2:   #A9BACD;
+  --on-ink-3:   #7B8FA6;
+  --line-ink:   #23384f;
+
+  /* Business fields. Decorative and structural only — never the sole carrier
+     of meaning, and never the colour of body text. */
+  --build:      #FF5B1A;
+  --paper:      #1B4DE4;
+  --mobility:   #00A876;
+
+  --focus:      #FFC93C;
+
+  --shadow-1: 0 1px 2px rgba(10, 22, 40, .06), 0 4px 12px -6px rgba(10, 22, 40, .18);
+  --shadow-2: 0 2px 6px rgba(10, 22, 40, .08), 0 24px 48px -28px rgba(10, 22, 40, .45);
+
+  --ease: cubic-bezier(.16, .84, .28, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:   #070D16;
+    --ground-2: #0D1622;
+    --ground-3: #16202E;
+    --text:     #EEF3F8;
+    --text-2:   #A4B4C7;
+    --text-3:   #7A8CA2;
+    --line:     #1D2A3A;
+    --line-2:   #2C3D52;
+
+    --ink:      #050A11;
+    --ink-2:    #0D1622;
+    --ink-3:    #1B2A3C;
+    --line-ink: #1B2A3C;
+
+    --build:    #FF7A45;
+    --paper:    #5B85F5;
+    --mobility: #2ECF9B;
+
+    --shadow-1: 0 1px 2px rgba(0,0,0,.5), 0 4px 12px -6px rgba(0,0,0,.7);
+    --shadow-2: 0 2px 6px rgba(0,0,0,.55), 0 24px 48px -28px rgba(0,0,0,.9);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:   #070D16;
+  --ground-2: #0D1622;
+  --ground-3: #16202E;
+  --text:     #EEF3F8;
+  --text-2:   #A4B4C7;
+  --text-3:   #7A8CA2;
+  --line:     #1D2A3A;
+  --line-2:   #2C3D52;
+
+  --ink:      #050A11;
+  --ink-2:    #0D1622;
+  --ink-3:    #1B2A3C;
+  --line-ink: #1B2A3C;
+
+  --build:    #FF7A45;
+  --paper:    #5B85F5;
+  --mobility: #2ECF9B;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,.5), 0 4px 12px -6px rgba(0,0,0,.7);
+  --shadow-2: 0 2px 6px rgba(0,0,0,.55), 0 24px 48px -28px rgba(0,0,0,.9);
+}
+
+@theme inline {
+  --color-ink:      var(--ink);
+  --color-ink-2:    var(--ink-2);
+  --color-ink-3:    var(--ink-3);
+  --color-signal:   var(--signal);
+  --color-ground:   var(--ground);
+  --color-ground-2: var(--ground-2);
+  --color-ground-3: var(--ground-3);
+  --color-text:     var(--text);
+  --color-text-2:   var(--text-2);
+  --color-text-3:   var(--text-3);
+  --color-line:     var(--line);
+  --color-line-2:   var(--line-2);
+  --color-on-ink:   var(--on-ink);
+  --color-on-ink-2: var(--on-ink-2);
+  --color-on-ink-3: var(--on-ink-3);
+  --color-line-ink: var(--line-ink);
+  --font-display: var(--font-archivo);
+  --font-body:    var(--font-literata);
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    background: var(--ground);
+    color: var(--text);
+    font-family: var(--font-literata), Georgia, serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, .display {
+    font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+    font-variation-settings: "wdth" 112;
+  }
+
+  html[lang="bn"] body {
+    font-family: "Noto Sans Bengali", "Hind Siliguri", "Bangla Sangam MN", "Nirmala UI", sans-serif;
+  }
+
+  html[lang="bn"] h1,
+  html[lang="bn"] h2,
+  html[lang="bn"] h3,
+  html[lang="bn"] h4,
+  html[lang="bn"] .display,
+  html[lang="bn"] .font-display {
+    font-family: "Noto Sans Bengali", "Hind Siliguri", "Bangla Sangam MN", "Nirmala UI", sans-serif;
+    font-variation-settings: normal;
+    letter-spacing: 0;
+  }
+
+  /* Browser surfaces belong to the design system too. */
+  ::selection { background: var(--signal); color: var(--signal-ink); }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  * { scrollbar-color: var(--line-2) transparent; scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--ground-2); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-2);
+    border: 3px solid var(--ground-2);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+  a { color: inherit; text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+}
+
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* One authored entrance: the hero settles once on load, from a visible
+   resting state. Everything below is visible immediately. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.rise {
+  animation: rise .75s var(--ease) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rise { animation: none; }
+}
