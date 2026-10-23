@@ -29,6 +29,12 @@ const postgresDatabaseURI = isPostgres
         uri.searchParams.set('sslmode', 'no-verify')
       }
 
+      // Supabase's transaction pooler is designed for short-lived serverless
+      // functions and avoids exhausting the small session-pool connection limit.
+      if (process.env.VERCEL && uri.hostname.endsWith('.pooler.supabase.com')) {
+        uri.port = '6543'
+      }
+
       return uri.toString()
     })()
   : databaseURI
@@ -44,7 +50,10 @@ if (process.env.VERCEL && !isPostgres) {
 const database = isPostgres
   ? postgresAdapter({
       migrationDir: path.resolve(dirname, 'migrations'),
-      pool: { connectionString: postgresDatabaseURI },
+      pool: {
+        connectionString: postgresDatabaseURI,
+        max: process.env.VERCEL ? 1 : undefined,
+      },
     })
   : sqliteAdapter({
       client: { url: databaseURI },
