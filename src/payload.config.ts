@@ -1,3 +1,4 @@
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -16,10 +17,26 @@ import { GroupSettings } from '@/globals/GroupSettings'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 const payloadSecret = process.env.PAYLOAD_SECRET
+const databaseURI = process.env.DATABASE_URI || process.env.POSTGRES_URL || 'file:./nici.db'
+const isPostgres = databaseURI.startsWith('postgres://') || databaseURI.startsWith('postgresql://')
 
 if (!payloadSecret) {
   throw new Error('PAYLOAD_SECRET is required. Copy .env.example to .env and set a secure value.')
 }
+
+if (process.env.VERCEL && !isPostgres) {
+  throw new Error('DATABASE_URI must be a PostgreSQL connection string when deploying to Vercel.')
+}
+
+const database = isPostgres
+  ? postgresAdapter({
+      migrationDir: path.resolve(dirname, 'migrations'),
+      pool: { connectionString: databaseURI },
+    })
+  : sqliteAdapter({
+      client: { url: databaseURI },
+      push: true,
+    })
 
 export default buildConfig({
   admin: {
@@ -37,14 +54,8 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  // Local development runs on SQLite so the project needs no database server.
-  // For production, swap this for:
-  //   import { postgresAdapter } from '@payloadcms/db-postgres'
-  //   db: postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI } })
-  db: sqliteAdapter({
-    client: { url: process.env.DATABASE_URI || 'file:./nici.db' },
-    push: true,
-  }),
+  // SQLite keeps local setup simple; production uses the Supabase Postgres URL.
+  db: database,
   sharp,
   upload: {
     limits: { fileSize: 15_000_000 },

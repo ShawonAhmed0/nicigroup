@@ -11,11 +11,15 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/lib/seed.ts",
     "seed:bn": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/lib/seed-bengali.ts",
-    "seed:media": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/lib/seed-generated-media.ts"
+    "seed:media": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/lib/seed-generated-media.ts",
+    "vercel-build": "npm run migrate && npm run build"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "3.89.0",
     "@payloadcms/db-sqlite": "^3.89.0",
     "@payloadcms/next": "^3.89.0",
     "@payloadcms/richtext-lexical": "^3.89.0",
