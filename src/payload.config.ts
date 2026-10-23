@@ -19,6 +19,19 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const payloadSecret = process.env.PAYLOAD_SECRET
 const databaseURI = process.env.DATABASE_URI || process.env.POSTGRES_URL || 'file:./nici.db'
 const isPostgres = databaseURI.startsWith('postgres://') || databaseURI.startsWith('postgresql://')
+const postgresDatabaseURI = isPostgres
+  ? (() => {
+      const uri = new URL(databaseURI)
+
+      // node-postgres treats `require` as certificate verification, while Supabase's
+      // pooler uses it to mean encrypted transport without CA verification.
+      if (uri.searchParams.get('sslmode') === 'require') {
+        uri.searchParams.set('sslmode', 'no-verify')
+      }
+
+      return uri.toString()
+    })()
+  : databaseURI
 
 if (!payloadSecret) {
   throw new Error('PAYLOAD_SECRET is required. Copy .env.example to .env and set a secure value.')
@@ -31,7 +44,7 @@ if (process.env.VERCEL && !isPostgres) {
 const database = isPostgres
   ? postgresAdapter({
       migrationDir: path.resolve(dirname, 'migrations'),
-      pool: { connectionString: databaseURI },
+      pool: { connectionString: postgresDatabaseURI },
     })
   : sqliteAdapter({
       client: { url: databaseURI },
