@@ -19,6 +19,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const payloadSecret = process.env.PAYLOAD_SECRET
 const databaseURI = process.env.DATABASE_URI || process.env.POSTGRES_URL || 'file:./nici.db'
 const isPostgres = databaseURI.startsWith('postgres://') || databaseURI.startsWith('postgresql://')
+const isMigrationCommand = process.env.npm_lifecycle_event?.startsWith('migrate') ?? false
 const postgresDatabaseURI = isPostgres
   ? (() => {
       const uri = new URL(databaseURI)
@@ -31,7 +32,11 @@ const postgresDatabaseURI = isPostgres
 
       // Supabase's transaction pooler is designed for short-lived serverless
       // functions and avoids exhausting the small session-pool connection limit.
-      if (process.env.VERCEL && uri.hostname.endsWith('.pooler.supabase.com')) {
+      if (
+        process.env.VERCEL &&
+        !isMigrationCommand &&
+        uri.hostname.endsWith('.pooler.supabase.com')
+      ) {
         uri.port = '6543'
       }
 
@@ -52,7 +57,7 @@ const database = isPostgres
       migrationDir: path.resolve(dirname, 'migrations'),
       pool: {
         connectionString: postgresDatabaseURI,
-        max: process.env.VERCEL ? 1 : undefined,
+        max: process.env.VERCEL ? (isMigrationCommand ? 3 : 1) : undefined,
       },
     })
   : sqliteAdapter({
