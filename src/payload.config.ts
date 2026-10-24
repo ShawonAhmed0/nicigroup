@@ -57,7 +57,7 @@ const database = isPostgres
       migrationDir: path.resolve(dirname, 'migrations'),
       pool: {
         connectionString: postgresDatabaseURI,
-        max: process.env.VERCEL ? (isMigrationCommand ? 3 : 1) : undefined,
+        max: process.env.VERCEL ? 3 : undefined,
       },
     })
   : sqliteAdapter({
