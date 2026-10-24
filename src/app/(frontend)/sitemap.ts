@@ -4,6 +4,8 @@ import { getBusinessTree, getConcerns, getNews, getProjects } from '@/lib/querie
 
 const BASE = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
+export const dynamic = 'force-dynamic'
+
 /** Regenerated from the CMS, so a newly published business is submitted automatically. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [tree, concerns, projects, news] = await Promise.all([
