@@ -6,6 +6,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { ArrowRight } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getBusinessTree, getGroup } from '@/lib/queries'
 
@@ -25,6 +26,7 @@ export default async function AboutPage() {
   const [group, tree] = await Promise.all([getGroup(locale), getBusinessTree(locale)])
   const name = group?.name ?? 'NICI Group'
   const chairman = group?.chairman
+  const chairmanFallback = getGeneratedAsset('leadership', locale)
 
   return (
     <article>
@@ -145,6 +147,8 @@ export default async function AboutPage() {
             <div>
               <MediaFrame
                 media={chairman?.portrait}
+                fallbackSrc={chairmanFallback?.src}
+                fallbackAlt={chairmanFallback?.alt}
                 kind="portrait"
                 tint="var(--signal)"
                 base="var(--ink-2)"

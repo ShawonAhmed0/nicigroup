@@ -8,6 +8,7 @@ import { CuratedUpdates } from '@/components/CuratedUpdates'
 import { ArrowRight, Mail, Phone, Pin, SocialIcon } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getConcern } from '@/lib/queries'
 
@@ -34,6 +35,7 @@ export default async function ConcernPage({ params }: Params) {
   if (!concern) notFound()
 
   const kindLabel = concern.kind === 'csr' ? dict.common.socialInitiative : dict.common.sisterConcern
+  const fallback = getGeneratedAsset(concern.slug, locale)
   const hasContact = Boolean(concern.contact?.address || concern.contact?.phone || concern.contact?.email)
   const curatedUpdates = concern.feedConfig?.enabled ? (concern.feedConfig.curated ?? []) : []
 
@@ -69,6 +71,8 @@ export default async function ConcernPage({ params }: Params) {
 
             <MediaFrame
               media={concern.heroImage}
+              fallbackSrc={fallback?.src}
+              fallbackAlt={fallback?.alt}
               tint="var(--signal)"
               base="var(--ink-2)"
               labelTone="dark-ground"

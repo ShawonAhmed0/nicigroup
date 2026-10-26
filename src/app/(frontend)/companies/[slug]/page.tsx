@@ -8,6 +8,7 @@ import { CuratedUpdates } from '@/components/CuratedUpdates'
 import { ArrowRight, Mail, Phone, Pin, SocialIcon } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getCompany, getProjects, getWings } from '@/lib/queries'
 
@@ -37,6 +38,7 @@ export default async function CompanyPage({ params }: Params) {
     getProjects(company.id, locale),
   ])
   const hue = company.brandColour ?? '#1B4DE4'
+  const fallback = getGeneratedAsset(company.slug, locale)
   const curatedUpdates = company.feedConfig?.enabled ? (company.feedConfig.curated ?? []) : []
 
   return (
@@ -85,6 +87,8 @@ export default async function CompanyPage({ params }: Params) {
 
             <MediaFrame
               media={company.heroImage}
+              fallbackSrc={fallback?.src}
+              fallbackAlt={fallback?.alt}
               tint={hue}
               label={`${company.name} — ${dict.company.photography}`}
               className="aspect-[4/3] w-full border border-white/15"

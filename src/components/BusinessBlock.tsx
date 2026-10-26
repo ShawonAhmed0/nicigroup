@@ -1,6 +1,7 @@
 import { ArrowRight } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import type { Company, Wing } from '@/payload-types'
 
@@ -21,8 +22,9 @@ export async function BusinessBlock({
   wings: Wing[]
   flip: boolean
 }) {
-  const { dict } = await getI18n()
+  const { locale, dict } = await getI18n()
   const hue = company.brandColour ?? '#1B4DE4'
+  const fallback = getGeneratedAsset(company.slug, locale)
 
   return (
     <section
@@ -38,6 +40,8 @@ export async function BusinessBlock({
       <div className="grid lg:grid-cols-2">
         <MediaFrame
           media={company.heroImage}
+          fallbackSrc={fallback?.src}
+          fallbackAlt={fallback?.alt}
           tint={hue}
           kind="scene"
           label={`${company.name} — ${dict.company.photography}`}

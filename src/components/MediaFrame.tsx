@@ -16,6 +16,8 @@ type Ref = number | string | Media | null | undefined
 export async function MediaFrame({
   media,
   label,
+  fallbackSrc,
+  fallbackAlt,
   tint = 'var(--signal)',
   className = '',
   sizes = '(max-width: 1024px) 100vw, 50vw',
@@ -27,6 +29,9 @@ export async function MediaFrame({
 }: {
   media: Ref
   label: string
+  /** A bundled editorial image used until the CMS has a replacement upload. */
+  fallbackSrc?: string | null
+  fallbackAlt?: string
   tint?: string
   className?: string
   sizes?: string
@@ -40,14 +45,15 @@ export async function MediaFrame({
   labelTone?: 'light-ground' | 'dark-ground'
 }) {
   const locale = await getLocale()
-  const url = mediaUrl(media, size)
+  const mediaSource = mediaUrl(media, size)
+  const url = mediaSource ?? fallbackSrc
 
   if (url) {
     return (
       <div className={`relative overflow-hidden bg-ground-3 ${className}`}>
         <Image
           src={url}
-          alt={mediaAlt(media, locale)}
+          alt={mediaSource ? mediaAlt(media, locale) : (fallbackAlt ?? label)}
           fill
           sizes={sizes}
           priority={priority}

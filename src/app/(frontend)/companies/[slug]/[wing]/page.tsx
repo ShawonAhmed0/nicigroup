@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { ArrowRight } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getCompany, getWing, getWings } from '@/lib/queries'
 
@@ -36,6 +37,7 @@ export default async function WingPage({ params }: Params) {
 
   const siblings = (await getWings(company.id, locale)).filter((w) => w.id !== wing.id)
   const hue = company.brandColour ?? '#1B4DE4'
+  const fallback = getGeneratedAsset(wing.slug, locale)
   const hasBody = Boolean(wing.description || (wing.details?.length ?? 0) > 0)
 
   return (
@@ -104,6 +106,8 @@ export default async function WingPage({ params }: Params) {
 
           <MediaFrame
             media={wing.image}
+            fallbackSrc={fallback?.src}
+            fallbackAlt={fallback?.alt}
             tint={hue}
             label={`${wing.name} — ${dict.wing.photography}`}
             className={`aspect-[4/3] w-full ${hasBody ? 'lg:sticky lg:top-24' : ''}`}

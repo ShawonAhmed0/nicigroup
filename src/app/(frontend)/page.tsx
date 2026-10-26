@@ -4,6 +4,7 @@ import { BusinessBlock } from '@/components/BusinessBlock'
 import { ArrowDown, ArrowRight, Mail, Phone, Pin } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getCompanies, getConcerns, getGroup, getGroupFigures, getWings } from '@/lib/queries'
 
@@ -23,6 +24,7 @@ export default async function HomePage() {
   )
 
   const chairman = group?.chairman
+  const chairmanFallback = getGeneratedAsset('leadership', locale)
 
   /* Counted from the database, never typed in. NICI has not supplied headcount,
      turnover or years in operation, so the group's scale is stated with the
@@ -83,6 +85,8 @@ export default async function HomePage() {
                 <span aria-hidden="true" className="absolute -top-1.5 left-0 z-10 h-1.5 w-20 bg-signal" />
                 <MediaFrame
                   media={chairman?.portrait}
+                  fallbackSrc={chairmanFallback?.src}
+                  fallbackAlt={chairmanFallback?.alt}
                   kind="portrait"
                   tint="var(--signal)"
                   base="var(--ink-2)"

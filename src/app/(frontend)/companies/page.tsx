@@ -4,6 +4,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { ArrowRight } from '@/components/Icon'
 import { LocalizedLink as Link } from '@/components/LocalizedLink'
 import { MediaFrame } from '@/components/MediaFrame'
+import { getGeneratedAsset } from '@/lib/generated-assets'
 import { getI18n } from '@/lib/i18n'
 import { getBusinessTree, getGroup } from '@/lib/queries'
 
@@ -58,6 +59,7 @@ export default async function CompaniesPage() {
             <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,20rem),1fr))] gap-7">
               {tree.map(({ company, wings }) => {
                 const hue = company.brandColour ?? '#1B4DE4'
+                const fallback = getGeneratedAsset(company.slug, locale)
                 return (
                   <li
                     key={company.id}
@@ -66,6 +68,8 @@ export default async function CompaniesPage() {
                   >
                     <MediaFrame
                       media={company.heroImage}
+                      fallbackSrc={fallback?.src}
+                      fallbackAlt={fallback?.alt}
                       tint={hue}
                       label={`${company.name} — ${dict.company.photography}`}
                       size="card"
